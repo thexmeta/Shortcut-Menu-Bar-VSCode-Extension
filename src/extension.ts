@@ -211,30 +211,78 @@ export function activate(context: ExtensionContext) {
 
   // Adding 3 // user defined userButtons
 
-  // Support custom buttons (an array of custom button definitions)
-  let updateCustomButtons = () => {
+
+  const defaultIconMap: Record<string, string> = {
+    "ShortcutMenuBar.navigateBack": "$(goto-previous-location)",
+    "ShortcutMenuBar.navigateForward": "$(goto-next-location)",
+    "ShortcutMenuBar.switchHeaderSource": "$(switch)",
+    "ShortcutMenuBar.save": "$(save)",
+    "ShortcutMenuBar.beautify": "$(json)",
+    "ShortcutMenuBar.toggleRenderWhitespace": "$(whitespace)",
+    "ShortcutMenuBar.openFilesList": "$(list-unordered)",
+    "ShortcutMenuBar.toggleTerminal": "$(terminal)",
+    "ShortcutMenuBar.toggleActivityBar": "$(activity-bar)",
+    "ShortcutMenuBar.quickOpen": "$(files-search)",
+    "ShortcutMenuBar.findReplace": "$(find)",
+    "ShortcutMenuBar.undo": "$(notebook-revert)",
+    "ShortcutMenuBar.redo": "$(redo)",
+    "ShortcutMenuBar.commentLine": "$(comment-line)",
+    "ShortcutMenuBar.saveAll": "$(save-all)",
+    "ShortcutMenuBar.formatWith": "$(format-with)",
+    "ShortcutMenuBar.openFile": "$(folder-opened)",
+    "ShortcutMenuBar.newFile": "$(new-file)",
+    "ShortcutMenuBar.goToDefinition": "$(go-to-definition)",
+    "ShortcutMenuBar.cut": "$(debug-step-out)",
+    "ShortcutMenuBar.copy": "$(files)",
+    "ShortcutMenuBar.paste": "$(record-keys)",
+    "ShortcutMenuBar.compareWithSaved": "$(diff)",
+    "ShortcutMenuBar.showCommands": "$(tools)",
+    "ShortcutMenuBar.startDebugging": "$(debug-alt)",
+    "ShortcutMenuBar.indentLines": "$(indent-lines)",
+    "ShortcutMenuBar.outdentLines": "$(outdent-lines)",
+    "ShortcutMenuBar.openSettings": "$(preferences-open-settings)",
+    "ShortcutMenuBar.toggleWordWrap": "$(word-wrap)",
+    "ShortcutMenuBar.changeEncoding": "$(change-encoding)",
+    "ShortcutMenuBar.powershellRestartSession": "$(powershell-restart)",
+    "ShortcutMenuBar.toggleMaximizeEditorGroup": "$(chrome-maximize)",
+    "ShortcutMenuBar.codeFold": "$(fold-up)",
+    "ShortcutMenuBar.codeUnfold": "$(fold-down)",
+    "ShortcutMenuBar.plantUmlPreview": "$(preview)",
+  };
+
+  // Support unified buttons
+  let updateUnifiedButtons = () => {
     let configPath = join(context.extensionPath, "package.json");
     fs.readFile(configPath, "utf8", (err, data) => {
       if (err) return;
       const ext_config = JSON.parse(data);
       const config = workspace.getConfiguration("ShortcutMenuBar");
-      const customButtons = config.get<any[]>("customButtons") || [];
+      const buttons = config.get<any[]>("buttons") || [];
 
       let needPatchExtension = false;
 
-      // Clean up previous custom buttons from package.json commands and menus
-      let newCommands = ext_config.contributes.commands.filter((cmd: any) => !cmd.command.startsWith("ShortcutMenuBar.customButton_"));
-      let newMenus = ext_config.contributes.menus["editor/title"].filter((menu: any) => !menu.command.startsWith("ShortcutMenuBar.customButton_"));
+      let newCommands: any[] = [];
+      let newMenus: any[] = [];
 
-      // Add new custom buttons
-      customButtons.forEach((btn, index) => {
+      // Add buttons
+      buttons.forEach((btn, index) => {
+        // default missing show to true if custom, or explicitly true
+        if (btn.show === false) return;
         if (!btn.command) return;
-        let cmdId = "ShortcutMenuBar.customButton_" + index;
 
-        let title = btn.name || "Custom Button";
-        let icon = btn.icon || "$(tools)";
-        let order = btn.order !== undefined ? btn.order : 100;
-        let group = btn.alwaysVisible ? "navigation@" + order : "1_navigation@" + order;
+        let cmdId = btn.command;
+        let isCustom = !defaultIconMap[cmdId] && !cmdId.startsWith("ShortcutMenuBar.");
+
+        if (isCustom) {
+           cmdId = "ShortcutMenuBar.customButton_" + index;
+        }
+
+        let title = btn.name || cmdId;
+        let icon = btn.icon || defaultIconMap[btn.command] || "$(tools)";
+        let order = btn.order !== undefined ? btn.order : index;
+        // Default alwaysVisible to false, unless set
+        let alwaysVisible = btn.alwaysVisible === true;
+        let group = alwaysVisible ? "navigation@" + order : "1_navigation@" + order;
         let when = btn.when || "";
 
         newCommands.push({
@@ -254,7 +302,6 @@ export function activate(context: ExtensionContext) {
         newMenus.push(menuEntry);
       });
 
-      // Check if patch is needed by comparing strings (ignoring order might be tricky, but JSON.stringify works if we assume consistent order)
       if (JSON.stringify(newCommands) !== JSON.stringify(ext_config.contributes.commands) ||
           JSON.stringify(newMenus) !== JSON.stringify(ext_config.contributes.menus["editor/title"])) {
         ext_config.contributes.commands = newCommands;
@@ -265,7 +312,7 @@ export function activate(context: ExtensionContext) {
       if (needPatchExtension) {
         fs.writeFile(configPath, JSON.stringify(ext_config, null, 2), "utf8", (err) => {
           if (!err) {
-            window.showInformationMessage("Shortcut Menu Bar: Custom buttons updated. Please restart VS Code to apply changes.", "Restart").then(res => {
+            window.showInformationMessage("Shortcut Menu Bar: Buttons updated. Please restart VS Code to apply changes.", "Restart").then(res => {
               if (res === "Restart") {
                 commands.executeCommand("workbench.action.reloadWindow");
               }
@@ -276,7 +323,6 @@ export function activate(context: ExtensionContext) {
     });
   };
 
-  // Register the dynamically created commands based on package.json (to handle the restart case where package.json already has them)
   const configPath = join(context.extensionPath, "package.json");
   fs.readFile(configPath, "utf8", (err, data) => {
     if (err) return;
@@ -286,8 +332,10 @@ export function activate(context: ExtensionContext) {
         let index = parseInt(item.command.split("_")[1]);
         context.subscriptions.push(commands.registerCommand(item.command, () => {
            const config = workspace.getConfiguration("ShortcutMenuBar");
-           const customButtons = config.get<any[]>("customButtons") || [];
-           const btn = customButtons[index];
+           const buttons = config.get<any[]>("buttons") || [];
+           // we need to find the correct button by index mapping
+           const customButtons = buttons.filter(b => !defaultIconMap[b.command] && !b.command.startsWith("ShortcutMenuBar."));
+           const btn = buttons[index]; // The index corresponds to original position in the config array
            if (btn && btn.command) {
              const palettes = btn.command.split(",");
              executeNext(item.command, palettes, 0);
@@ -297,34 +345,16 @@ export function activate(context: ExtensionContext) {
     });
   });
 
-  updateCustomButtons();
+  updateUnifiedButtons();
   let configWatcher = workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration("ShortcutMenuBar.customButtons")) {
-      updateCustomButtons();
+    if (event.affectsConfiguration("ShortcutMenuBar.buttons")) {
+      updateUnifiedButtons();
     }
   });
   context.subscriptions.push(configWatcher);
 
-  // Keep old user buttons 1 to 10 for backwards compatibility
-  for (let index = 1; index <= 10; index++) {
-    const printIndex = index !== 10 ? "0" + index : "" + index;
-    let action = "userButton" + printIndex;
-    let actionName = "ShortcutMenuBar." + action;
-    let disposableUserButtonCommand = commands.registerCommand(
-      actionName,
-      () => {
-        const config = workspace.getConfiguration("ShortcutMenuBar");
-        let configName = action + "Command";
-        const command = config.get<String>(configName);
-        if (command === null || command === undefined || command.trimEnd() === "") {
-          return;
-        }
-        const palettes = command.split(",");
-        executeNext(action, palettes, 0);
-      }
-    );
-    context.subscriptions.push(disposableUserButtonCommand);
-  }
+
+
 
 }
 

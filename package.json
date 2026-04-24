@@ -96,286 +96,238 @@
       {
         "title": "Shortcut Menu Bar configuration",
         "properties": {
-          "ShortcutMenuBar.save": {
-            "title": "Save active file",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Save file'"
-          },
-          "ShortcutMenuBar.navigateBack": {
-            "title": "Navigate back",
-            "type": "boolean",
-            "default": true,
-            "description": "show icon for 'Navigate back'"
-          },
-          "ShortcutMenuBar.navigateForward": {
-            "title": "Navigate forward",
-            "type": "boolean",
-            "default": true,
-            "description": "show icon for 'Navigate forward'"
-          },
-          "ShortcutMenuBar.switchHeaderSource": {
-            "title": "Switch header source",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Switch header/source'"
-          },
-          "ShortcutMenuBar.beautify": {
-            "title": "Beautify selection/file",
-            "type": "boolean",
-            "default": true,
-            "description": "show icon for 'Beautify/Format selection or file'"
-          },
-          "ShortcutMenuBar.toggleRenderWhitespace": {
-            "title": "Toggle render whitespace",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Toggle render whitespace'"
-          },
-          "ShortcutMenuBar.openFilesList": {
-            "title": "show opened files list",
-            "type": "boolean",
-            "default": true,
-            "description": "show icon for 'Opened files list'"
-          },
-          "ShortcutMenuBar.toggleTerminal": {
-            "title": "Toggle terminal",
-            "type": "boolean",
-            "default": true,
-            "description": "show icon for 'Toggle terminal'"
-          },
-          "ShortcutMenuBar.toggleActivityBar": {
-            "title": "Toggle activity bar",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Toggle activity bar'"
-          },
-          "ShortcutMenuBar.quickOpen": {
-            "title": "Quick open",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for Go to File, 'Quick Open'"
-          },
-          "ShortcutMenuBar.findReplace": {
-            "title": "Find replace",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Find/Replace in active file'"
-          },
-          "ShortcutMenuBar.undo": {
-            "title": "Undo",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Undo'"
-          },
-          "ShortcutMenuBar.redo": {
-            "title": "Redo",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Redo'"
-          },
-          "ShortcutMenuBar.commentLine": {
-            "title": "Toggle line comment",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Toggle line comment'"
-          },
-          "ShortcutMenuBar.saveAll": {
-            "title": "Save all",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Save all'"
-          },
-          "ShortcutMenuBar.formatWith": {
-            "title": "Format selection/file with",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Format selection/file with...'"
-          },
-          "ShortcutMenuBar.openFile": {
-            "title": "Open file",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Open File'"
-          },
-          "ShortcutMenuBar.newFile": {
-            "title": "New file",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'New File'"
-          },
-          "ShortcutMenuBar.goToDefinition": {
-            "title": "Go to definition",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Go to definition'"
-          },
-          "ShortcutMenuBar.cut": {
-            "title": "Cut",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Cut'"
-          },
-          "ShortcutMenuBar.copy": {
-            "title": "Copy",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Copy'"
-          },
-          "ShortcutMenuBar.paste": {
-            "title": "Paste",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Paste'"
-          },
-          "ShortcutMenuBar.compareWithSaved": {
-            "title": "Compare with saved",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Compare active file with saved'"
-          },
-          "ShortcutMenuBar.showCommands": {
-            "title": "Open command pallet",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Open command pallet / Show all commands'"
-          },
-          "ShortcutMenuBar.startDebugging": {
-            "title": "Start debugging",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Start debugging'"
-          },
-          "ShortcutMenuBar.indentLines": {
-            "title": "Indent lines",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Indent Lines'"
-          },
-          "ShortcutMenuBar.outdentLines": {
-            "title": "Outdent lines",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Outdent Lines'"
-          },
-          "ShortcutMenuBar.openSettings": {
-            "title": "Open settings",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Open settings'"
-          },
-          "ShortcutMenuBar.toggleWordWrap": {
-            "title": "Toggle word wrap",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Toggle word wrap'"
-          },
-          "ShortcutMenuBar.changeEncoding": {
-            "title": "Change file encoding",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Change file encoding'"
-          },
-          "ShortcutMenuBar.powershellRestartSession": {
-            "title": "Restart PowerShell session",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Restart PowerShell session'"
-          },
-          "ShortcutMenuBar.userButton01Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 1'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton02Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 2'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton03Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 3'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton04Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 4'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton05Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 5'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton06Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 6'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton07Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 7'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton08Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 8'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton09Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 9'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.userButton10Command": {
-            "title": "command",
-            "type": "string",
-            "default": null,
-            "markdownDescription": "command executed with 'user action 0'; _icon is shown if set_"
-          },
-          "ShortcutMenuBar.codeFold": {
-            "title": "Code fold",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Code fold'"
-          },
-          "ShortcutMenuBar.codeUnfold": {
-            "title": "Code unfold",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Code unfold'"
-          },
-          "ShortcutMenuBar.plantUmlPreview": {
-            "title": "PlantUML Preview",
-            "type": "boolean",
-            "default": false,
-            "description": "preview current diagram"
-          },
-          "ShortcutMenuBar.toggleMaximizeEditorGroup": {
-            "title": "Toggle Maximize Editor Group",
-            "type": "boolean",
-            "default": false,
-            "description": "show icon for 'Toggle Maximize Editor Group'"
-          },
-          "ShortcutMenuBar.customButtons": {
+          "ShortcutMenuBar.buttons": {
             "type": "array",
-            "default": [],
-            "description": "Define custom buttons here. Order, name, command, always visible, etc.",
+            "default": [
+              {
+                "command": "ShortcutMenuBar.navigateBack",
+                "show": true,
+                "name": "Navigate back",
+                "order": 2
+              },
+              {
+                "command": "ShortcutMenuBar.navigateForward",
+                "show": true,
+                "name": "Navigate forward",
+                "order": 3
+              },
+              {
+                "command": "ShortcutMenuBar.switchHeaderSource",
+                "show": false,
+                "name": "Switch Header/Source",
+                "order": 1,
+                "when": "editorTextFocus"
+              },
+              {
+                "command": "ShortcutMenuBar.save",
+                "show": false,
+                "name": "Save",
+                "order": 4,
+                "when": "!isInDiffEditor && !markdownPreviewFocus"
+              },
+              {
+                "command": "ShortcutMenuBar.beautify",
+                "show": true,
+                "name": "Beautify",
+                "order": 5,
+                "when": "!isInDiffEditor && !markdownPreviewFocus"
+              },
+              {
+                "command": "ShortcutMenuBar.toggleRenderWhitespace",
+                "show": false,
+                "name": "Toggle render whitespace",
+                "order": 6
+              },
+              {
+                "command": "ShortcutMenuBar.openFilesList",
+                "show": true,
+                "name": "Show opened files list",
+                "order": 7,
+                "when": "!isInDiffEditor && !markdownPreviewFocus"
+              },
+              {
+                "command": "ShortcutMenuBar.toggleTerminal",
+                "show": true,
+                "name": "Toggle terminal",
+                "order": 8
+              },
+              {
+                "command": "ShortcutMenuBar.toggleActivityBar",
+                "show": false,
+                "name": "Toggle activity bar",
+                "order": 9
+              },
+              {
+                "command": "ShortcutMenuBar.quickOpen",
+                "show": false,
+                "name": "Quick open",
+                "order": 10
+              },
+              {
+                "command": "ShortcutMenuBar.findReplace",
+                "show": false,
+                "name": "Find replace",
+                "order": 11
+              },
+              {
+                "command": "ShortcutMenuBar.undo",
+                "show": false,
+                "name": "Undo",
+                "order": 12,
+                "when": "textInputFocus && !editorReadonly"
+              },
+              {
+                "command": "ShortcutMenuBar.redo",
+                "show": false,
+                "name": "Redo",
+                "order": 13,
+                "when": "textInputFocus && !editorReadonly"
+              },
+              {
+                "command": "ShortcutMenuBar.commentLine",
+                "show": false,
+                "name": "Toggle line comment",
+                "order": 14,
+                "when": "editorTextFocus && !editorReadonly"
+              },
+              {
+                "command": "ShortcutMenuBar.saveAll",
+                "show": false,
+                "name": "Save all",
+                "order": 15
+              },
+              {
+                "command": "ShortcutMenuBar.formatWith",
+                "show": false,
+                "name": "Format document with..",
+                "order": 16,
+                "when": "!isInDiffEditor && !markdownPreviewFocus"
+              },
+              {
+                "command": "ShortcutMenuBar.openFile",
+                "show": false,
+                "name": "Open file",
+                "order": 17
+              },
+              {
+                "command": "ShortcutMenuBar.newFile",
+                "show": false,
+                "name": "New file",
+                "order": 18
+              },
+              {
+                "command": "ShortcutMenuBar.goToDefinition",
+                "show": false,
+                "name": "Go to definition",
+                "order": 19,
+                "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
+              },
+              {
+                "command": "ShortcutMenuBar.cut",
+                "show": false,
+                "name": "Cut",
+                "order": 20
+              },
+              {
+                "command": "ShortcutMenuBar.copy",
+                "show": false,
+                "name": "Copy",
+                "order": 21
+              },
+              {
+                "command": "ShortcutMenuBar.paste",
+                "show": false,
+                "name": "Paste",
+                "order": 22
+              },
+              {
+                "command": "ShortcutMenuBar.compareWithSaved",
+                "show": false,
+                "name": "Compare with saved",
+                "order": 23
+              },
+              {
+                "command": "ShortcutMenuBar.showCommands",
+                "show": false,
+                "name": "Open command pallet",
+                "order": 24
+              },
+              {
+                "command": "ShortcutMenuBar.startDebugging",
+                "show": false,
+                "name": "Start debugging",
+                "order": 25,
+                "when": "debuggersAvailable && !inDebugMode"
+              },
+              {
+                "command": "ShortcutMenuBar.indentLines",
+                "show": false,
+                "name": "Indent lines",
+                "order": 26
+              },
+              {
+                "command": "ShortcutMenuBar.outdentLines",
+                "show": false,
+                "name": "Outdent lines",
+                "order": 27
+              },
+              {
+                "command": "ShortcutMenuBar.openSettings",
+                "show": false,
+                "name": "open settings",
+                "order": 28
+              },
+              {
+                "command": "ShortcutMenuBar.toggleWordWrap",
+                "show": false,
+                "name": "Toggle word wrap",
+                "order": 29
+              },
+              {
+                "command": "ShortcutMenuBar.changeEncoding",
+                "show": false,
+                "name": "Change file encoding",
+                "order": 30
+              },
+              {
+                "command": "ShortcutMenuBar.powershellRestartSession",
+                "show": false,
+                "name": "Restart PowerShell session",
+                "order": 31
+              },
+              {
+                "command": "ShortcutMenuBar.toggleMaximizeEditorGroup",
+                "show": false,
+                "name": "Toggle Maximize Editor Group",
+                "order": 32
+              },
+              {
+                "command": "ShortcutMenuBar.codeFold",
+                "show": false,
+                "name": "Code fold",
+                "order": 40
+              },
+              {
+                "command": "ShortcutMenuBar.codeUnfold",
+                "show": false,
+                "name": "Code unfold",
+                "order": 41
+              },
+              {
+                "command": "ShortcutMenuBar.plantUmlPreview",
+                "show": false,
+                "name": "PlantUML Preview",
+                "order": 42,
+                "when": "resourceExtname =~ /^.wsd$|^.pu$|^.puml$|^.plantuml$|^.iuml$/"
+              }
+            ],
+            "description": "Configure the shortcut menu bar buttons (both built-in and custom).",
             "items": {
               "type": "object",
               "properties": {
                 "name": {
                   "type": "string",
-                  "description": "The name/title of the button (shows on hover)"
+                  "description": "The title of the button"
                 },
                 "command": {
                   "type": "string",
@@ -383,20 +335,23 @@
                 },
                 "icon": {
                   "type": "string",
-                  "description": "The icon for the button (e.g., $(play) or $(gear))"
+                  "description": "The codicon or path for the button"
+                },
+                "show": {
+                  "type": "boolean",
+                  "description": "Should the button be shown?"
                 },
                 "order": {
                   "type": "number",
-                  "description": "The order of the button in the menu bar. Defaults to 100."
+                  "description": "The order index"
                 },
                 "alwaysVisible": {
                   "type": "boolean",
-                  "default": true,
                   "description": "If false, the button might collapse into the ... menu"
                 },
                 "when": {
                   "type": "string",
-                  "description": "Optional condition for when this button should appear"
+                  "description": "Context condition to show the button"
                 }
               }
             }
