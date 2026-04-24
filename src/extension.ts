@@ -21,7 +21,8 @@
 
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-// let fs = require("fs");
+import fs = require("fs");
+import { join } from "path";
 import { basename, dirname, extname } from "path";
 import {
   commands,
@@ -105,6 +106,10 @@ export function activate(context: ExtensionContext) {
       "workbench.action.editor.changeEncoding",
     ],
     ["ShortcutMenuBar.powershellRestartSession", "PowerShell.RestartSession"],
+    ["ShortcutMenuBar.toggleMaximizeEditorGroup","workbench.action.toggleMaximizeEditorGroup"],
+    ["ShortcutMenuBar.codeFold", "editor.foldAll"],
+    ["ShortcutMenuBar.codeUnfold", "editor.unfoldAll"],
+    ["ShortcutMenuBar.plantUmlPreview", "plantuml.preview"],
   ];
 
   let disposableCommandsArray: Disposable[] = [];
@@ -205,6 +210,102 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(disposableSwitch);
 
   // Adding 3 // user defined userButtons
+
+  // Support custom buttons (an array of custom button definitions)
+  let updateCustomButtons = () => {
+    let configPath = join(context.extensionPath, "package.json");
+    fs.readFile(configPath, "utf8", (err, data) => {
+      if (err) return;
+      const ext_config = JSON.parse(data);
+      const config = workspace.getConfiguration("ShortcutMenuBar");
+      const customButtons = config.get<any[]>("customButtons") || [];
+
+      let needPatchExtension = false;
+
+      // Clean up previous custom buttons from package.json commands and menus
+      let newCommands = ext_config.contributes.commands.filter((cmd: any) => !cmd.command.startsWith("ShortcutMenuBar.customButton_"));
+      let newMenus = ext_config.contributes.menus["editor/title"].filter((menu: any) => !menu.command.startsWith("ShortcutMenuBar.customButton_"));
+
+      // Add new custom buttons
+      customButtons.forEach((btn, index) => {
+        if (!btn.command) return;
+        let cmdId = "ShortcutMenuBar.customButton_" + index;
+
+        let title = btn.name || "Custom Button";
+        let icon = btn.icon || "$(tools)";
+        let order = btn.order !== undefined ? btn.order : 100;
+        let group = btn.alwaysVisible ? "navigation@" + order : "1_navigation@" + order;
+        let when = btn.when || "";
+
+        newCommands.push({
+          "command": cmdId,
+          "title": title,
+          "category": "ShortcutMenuBar",
+          "icon": icon
+        });
+
+        let menuEntry: any = {
+          "command": cmdId,
+          "group": group
+        };
+        if (when) {
+          menuEntry.when = when;
+        }
+        newMenus.push(menuEntry);
+      });
+
+      // Check if patch is needed by comparing strings (ignoring order might be tricky, but JSON.stringify works if we assume consistent order)
+      if (JSON.stringify(newCommands) !== JSON.stringify(ext_config.contributes.commands) ||
+          JSON.stringify(newMenus) !== JSON.stringify(ext_config.contributes.menus["editor/title"])) {
+        ext_config.contributes.commands = newCommands;
+        ext_config.contributes.menus["editor/title"] = newMenus;
+        needPatchExtension = true;
+      }
+
+      if (needPatchExtension) {
+        fs.writeFile(configPath, JSON.stringify(ext_config, null, 2), "utf8", (err) => {
+          if (!err) {
+            window.showInformationMessage("Shortcut Menu Bar: Custom buttons updated. Please restart VS Code to apply changes.", "Restart").then(res => {
+              if (res === "Restart") {
+                commands.executeCommand("workbench.action.reloadWindow");
+              }
+            });
+          }
+        });
+      }
+    });
+  };
+
+  // Register the dynamically created commands based on package.json (to handle the restart case where package.json already has them)
+  const configPath = join(context.extensionPath, "package.json");
+  fs.readFile(configPath, "utf8", (err, data) => {
+    if (err) return;
+    const ext_config = JSON.parse(data);
+    ext_config.contributes.commands.forEach((item: any) => {
+      if (item.command && item.command.startsWith("ShortcutMenuBar.customButton_")) {
+        let index = parseInt(item.command.split("_")[1]);
+        context.subscriptions.push(commands.registerCommand(item.command, () => {
+           const config = workspace.getConfiguration("ShortcutMenuBar");
+           const customButtons = config.get<any[]>("customButtons") || [];
+           const btn = customButtons[index];
+           if (btn && btn.command) {
+             const palettes = btn.command.split(",");
+             executeNext(item.command, palettes, 0);
+           }
+        }));
+      }
+    });
+  });
+
+  updateCustomButtons();
+  let configWatcher = workspace.onDidChangeConfiguration((event) => {
+    if (event.affectsConfiguration("ShortcutMenuBar.customButtons")) {
+      updateCustomButtons();
+    }
+  });
+  context.subscriptions.push(configWatcher);
+
+  // Keep old user buttons 1 to 10 for backwards compatibility
   for (let index = 1; index <= 10; index++) {
     const printIndex = index !== 10 ? "0" + index : "" + index;
     let action = "userButton" + printIndex;
@@ -215,16 +316,9 @@ export function activate(context: ExtensionContext) {
         const config = workspace.getConfiguration("ShortcutMenuBar");
         let configName = action + "Command";
         const command = config.get<String>(configName);
-
-        // skip userButtons not set
-        if (
-          command === null ||
-          command === undefined ||
-          command.trimEnd() === ""
-        ) {
+        if (command === null || command === undefined || command.trimEnd() === "") {
           return;
         }
-
         const palettes = command.split(",");
         executeNext(action, palettes, 0);
       }
@@ -232,7 +326,6 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(disposableUserButtonCommand);
   }
 
-  //also update userButton in package.json.. see "Adding new userButtons" in help.md file
 }
 
 // this method is called when your extension is deactivated

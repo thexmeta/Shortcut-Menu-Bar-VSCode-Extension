@@ -2,7 +2,7 @@
   "name": "shortcut-menu-bar",
   "displayName": "Shortcut Menu Bar",
   "description": "Add handy buttons like beautify, show opened files, save, toggle terminal, activity bar etc to editor menu bar. User-defined buttons are also possible.",
-  "version": "3.0.4",
+  "version": "3.0.6",
   "publisher": "jerrygoyal",
   "author": {
     "name": "Gourav Goyal"
@@ -84,7 +84,11 @@
     "onCommand:ShortcutMenuBar.userButton06",
     "onCommand:ShortcutMenuBar.userButton07",
     "onCommand:ShortcutMenuBar.userButton08",
-    "onCommand:ShortcutMenuBar.userButton09"
+    "onCommand:ShortcutMenuBar.userButton09",
+    "onCommand:ShortcutMenuBar.codeFold",
+    "onCommand:ShortcutMenuBar.codeUnfold",
+    "onCommand:ShortcutMenuBar.plantUmlPreview",
+    "onCommand:ShortcutMenuBar.toggleMaximizeEditorGroup"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -337,6 +341,65 @@
             "type": "string",
             "default": null,
             "markdownDescription": "command executed with 'user action 0'; _icon is shown if set_"
+          },
+          "ShortcutMenuBar.codeFold": {
+            "title": "Code fold",
+            "type": "boolean",
+            "default": false,
+            "description": "show icon for 'Code fold'"
+          },
+          "ShortcutMenuBar.codeUnfold": {
+            "title": "Code unfold",
+            "type": "boolean",
+            "default": false,
+            "description": "show icon for 'Code unfold'"
+          },
+          "ShortcutMenuBar.plantUmlPreview": {
+            "title": "PlantUML Preview",
+            "type": "boolean",
+            "default": false,
+            "description": "preview current diagram"
+          },
+          "ShortcutMenuBar.toggleMaximizeEditorGroup": {
+            "title": "Toggle Maximize Editor Group",
+            "type": "boolean",
+            "default": false,
+            "description": "show icon for 'Toggle Maximize Editor Group'"
+          },
+          "ShortcutMenuBar.customButtons": {
+            "type": "array",
+            "default": [],
+            "description": "Define custom buttons here. Order, name, command, always visible, etc.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name/title of the button (shows on hover)"
+                },
+                "command": {
+                  "type": "string",
+                  "description": "The VS Code command to execute"
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "The icon for the button (e.g., $(play) or $(gear))"
+                },
+                "order": {
+                  "type": "number",
+                  "description": "The order of the button in the menu bar. Defaults to 100."
+                },
+                "alwaysVisible": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "If false, the button might collapse into the ... menu"
+                },
+                "when": {
+                  "type": "string",
+                  "description": "Optional condition for when this button should appear"
+                }
+              }
+            }
           }
         }
       }
@@ -346,19 +409,13 @@
         "command": "ShortcutMenuBar.navigateBack",
         "title": "Navigate back",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/triangle-left_light.svg",
-          "dark": "images/triangle-left.svg"
-        }
+        "icon": "$(goto-previous-location)"
       },
       {
         "command": "ShortcutMenuBar.navigateForward",
         "title": "Navigate forward",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/triangle-right_light.svg",
-          "dark": "images/triangle-right.svg"
-        }
+        "icon": "$(goto-next-location)"
       },
       {
         "command": "ShortcutMenuBar.switchHeaderSource",
@@ -373,46 +430,31 @@
         "command": "ShortcutMenuBar.save",
         "title": "Save",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/save_light.svg",
-          "dark": "images/save.svg"
-        }
+        "icon": "$(save)"
       },
       {
         "command": "ShortcutMenuBar.beautify",
         "title": "Beautify",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/format_light.svg",
-          "dark": "images/format.svg"
-        }
+        "icon": "$(json)"
       },
       {
         "command": "ShortcutMenuBar.toggleRenderWhitespace",
         "title": "Toggle render whitespace",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/whitespace_light.svg",
-          "dark": "images/whitespace.svg"
-        }
+        "icon": "$(whitespace)"
       },
       {
         "command": "ShortcutMenuBar.openFilesList",
         "title": "Show opened files list",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/list_light.svg",
-          "dark": "images/list.svg"
-        }
+        "icon": "$(list-unordered)"
       },
       {
         "command": "ShortcutMenuBar.toggleTerminal",
         "title": "Toggle terminal",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/terminal_light.svg",
-          "dark": "images/terminal.svg"
-        }
+        "icon": "$(terminal)"
       },
       {
         "command": "ShortcutMenuBar.toggleActivityBar",
@@ -445,19 +487,13 @@
         "command": "ShortcutMenuBar.undo",
         "title": "Undo",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/undo_light.svg",
-          "dark": "images/undo.svg"
-        }
+        "icon": "$(notebook-revert)"
       },
       {
         "command": "ShortcutMenuBar.redo",
         "title": "Redo",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/redo_light.svg",
-          "dark": "images/redo.svg"
-        }
+        "icon": "$(redo)"
       },
       {
         "command": "ShortcutMenuBar.commentLine",
@@ -472,10 +508,7 @@
         "command": "ShortcutMenuBar.saveAll",
         "title": "Save all",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/saveAll_light.svg",
-          "dark": "images/saveAll.svg"
-        }
+        "icon": "$(save-all)"
       },
       {
         "command": "ShortcutMenuBar.formatWith",
@@ -490,19 +523,13 @@
         "command": "ShortcutMenuBar.openFile",
         "title": "Open file",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/openFile_light.svg",
-          "dark": "images/openFile.svg"
-        }
+        "icon": "$(folder-opened)"
       },
       {
         "command": "ShortcutMenuBar.newFile",
         "title": "New file",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/newFile_light.svg",
-          "dark": "images/newFile.svg"
-        }
+        "icon": "$(new-file)"
       },
       {
         "command": "ShortcutMenuBar.goToDefinition",
@@ -517,55 +544,37 @@
         "command": "ShortcutMenuBar.cut",
         "title": "Cut",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/cut_light.svg",
-          "dark": "images/cut.svg"
-        }
+        "icon": "$(debug-step-out)"
       },
       {
         "command": "ShortcutMenuBar.copy",
         "title": "Copy",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/copy_light.svg",
-          "dark": "images/copy.svg"
-        }
+        "icon": "$(files)"
       },
       {
         "command": "ShortcutMenuBar.paste",
         "title": "Paste",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/paste_light.svg",
-          "dark": "images/paste.svg"
-        }
+        "icon": "$(record-keys)"
       },
       {
         "command": "ShortcutMenuBar.compareWithSaved",
         "title": "Compare with saved",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/compareWithSaved_light.svg",
-          "dark": "images/compareWithSaved.svg"
-        }
+        "icon": "$(diff)"
       },
       {
         "command": "ShortcutMenuBar.showCommands",
         "title": "Open command pallet",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/commands_light.svg",
-          "dark": "images/commands.svg"
-        }
+        "icon": "$(tools)"
       },
       {
         "command": "ShortcutMenuBar.startDebugging",
         "title": "Start debugging",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/debug_light.svg",
-          "dark": "images/debug.svg"
-        }
+        "icon": "$(debug-alt)"
       },
       {
         "command": "ShortcutMenuBar.indentLines",
@@ -589,19 +598,13 @@
         "command": "ShortcutMenuBar.openSettings",
         "title": "open settings",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/openSettings_light.svg",
-          "dark": "images/openSettings.svg"
-        }
+        "icon": "$(preferences-open-settings)"
       },
       {
         "command": "ShortcutMenuBar.toggleWordWrap",
         "title": "Toggle word wrap",
         "category": "ShortcutMenuBar",
-        "icon": {
-          "light": "images/wordWrap_light.svg",
-          "dark": "images/wordWrap.svg"
-        }
+        "icon": "$(word-wrap)"
       },
       {
         "command": "ShortcutMenuBar.changeEncoding",
@@ -710,6 +713,30 @@
           "light": "images/userButton10_light.svg",
           "dark": "images/userButton10.svg"
         }
+      },
+      {
+        "command": "ShortcutMenuBar.codeFold",
+        "title": "Code fold",
+        "category": "ShortcutMenuBar",
+        "icon": "$(fold-up)"
+      },
+      {
+        "command": "ShortcutMenuBar.codeUnfold",
+        "title": "Code unfold",
+        "category": "ShortcutMenuBar",
+        "icon": "$(fold-down)"
+      },
+      {
+        "command": "ShortcutMenuBar.plantUmlPreview",
+        "title": "PlantUML Preview",
+        "category": "ShortcutMenuBar",
+        "icon": "$(preview)"
+      },
+      {
+        "command": "ShortcutMenuBar.toggleMaximizeEditorGroup",
+        "title": "Toggle Maximize Editor Group",
+        "category": "ShortcutMenuBar",
+        "icon": "$(chrome-maximize)"
       }
     ],
     "keybindings": [
@@ -970,6 +997,26 @@
           "when": "config.ShortcutMenuBar.userButton10Command",
           "command": "ShortcutMenuBar.userButton10",
           "group": "navigation@39"
+        },
+        {
+          "when": "config.ShortcutMenuBar.codeFold",
+          "command": "ShortcutMenuBar.codeFold",
+          "group": "navigation@40"
+        },
+        {
+          "when": "config.ShortcutMenuBar.codeUnfold",
+          "command": "ShortcutMenuBar.codeUnfold",
+          "group": "navigation@41"
+        },
+        {
+          "when": "config.ShortcutMenuBar.plantUmlPreview && resourceExtname =~ /^.wsd$|^.pu$|^.puml$|^.plantuml$|^.iuml$/",
+          "command": "ShortcutMenuBar.plantUmlPreview",
+          "group": "navigation@42"
+        },
+        {
+          "when": "config.ShortcutMenuBar.toggleMaximizeEditorGroup",
+          "command": "ShortcutMenuBar.toggleMaximizeEditorGroup",
+          "group": "navigation@32"
         }
       ]
     }
