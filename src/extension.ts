@@ -212,6 +212,20 @@ export function activate(context: ExtensionContext) {
   // Adding 3 // user defined userButtons
 
 
+  const defaultWhenMap: Record<string, string> = {
+    "ShortcutMenuBar.switchHeaderSource": "editorTextFocus",
+    "ShortcutMenuBar.save": "!isInDiffEditor && !markdownPreviewFocus",
+    "ShortcutMenuBar.beautify": "!isInDiffEditor && !markdownPreviewFocus",
+    "ShortcutMenuBar.openFilesList": "!isInDiffEditor && !markdownPreviewFocus",
+    "ShortcutMenuBar.undo": "textInputFocus && !editorReadonly",
+    "ShortcutMenuBar.redo": "textInputFocus && !editorReadonly",
+    "ShortcutMenuBar.commentLine": "editorTextFocus && !editorReadonly",
+    "ShortcutMenuBar.formatWith": "!isInDiffEditor && !markdownPreviewFocus",
+    "ShortcutMenuBar.goToDefinition": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor",
+    "ShortcutMenuBar.startDebugging": "debuggersAvailable && !inDebugMode",
+    "ShortcutMenuBar.plantUmlPreview": "resourceExtname =~ /^.wsd$|^.pu$|^.puml$|^.plantuml$|^.iuml$/",
+  };
+
   const defaultIconMap: Record<string, string> = {
     "ShortcutMenuBar.navigateBack": "$(goto-previous-location)",
     "ShortcutMenuBar.navigateForward": "$(goto-next-location)",
@@ -283,7 +297,11 @@ export function activate(context: ExtensionContext) {
         // Default alwaysVisible to false, unless set
         let alwaysVisible = btn.alwaysVisible === true;
         let group = alwaysVisible ? "navigation@" + order : "1_navigation@" + order;
-        let when = btn.when || "";
+
+        let when = btn.when;
+        if(when === undefined) {
+           when = defaultWhenMap[btn.command] || "";
+        }
 
         newCommands.push({
           "command": cmdId,
