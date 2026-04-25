@@ -310,14 +310,16 @@ export function activate(context: ExtensionContext) {
           "icon": icon
         });
 
+
         let menuEntry: any = {
           "command": cmdId,
           "group": group
         };
-        if (when) {
+        if (when !== "") {
           menuEntry.when = when;
         }
         newMenus.push(menuEntry);
+
       });
 
       if (JSON.stringify(newCommands) !== JSON.stringify(ext_config.contributes.commands) ||
@@ -341,6 +343,7 @@ export function activate(context: ExtensionContext) {
     });
   };
 
+
   const configPath = join(context.extensionPath, "package.json");
   fs.readFile(configPath, "utf8", (err, data) => {
     if (err) return;
@@ -351,9 +354,7 @@ export function activate(context: ExtensionContext) {
         context.subscriptions.push(commands.registerCommand(item.command, () => {
            const config = workspace.getConfiguration("ShortcutMenuBar");
            const buttons = config.get<any[]>("buttons") || [];
-           // we need to find the correct button by index mapping
-           const customButtons = buttons.filter(b => !defaultIconMap[b.command] && !b.command.startsWith("ShortcutMenuBar."));
-           const btn = buttons[index]; // The index corresponds to original position in the config array
+           const btn = buttons[index];
            if (btn && btn.command) {
              const palettes = btn.command.split(",");
              executeNext(item.command, palettes, 0);
@@ -362,6 +363,7 @@ export function activate(context: ExtensionContext) {
       }
     });
   });
+
 
   updateUnifiedButtons();
   let configWatcher = workspace.onDidChangeConfiguration((event) => {
